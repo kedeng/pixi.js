@@ -1,6 +1,6 @@
 /*!
  * pixi.js - v5.2.0
- * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+ * Compiled Tue, 10 Dec 2019 13:20:17 UTC
  *
  * pixi.js is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -472,7 +472,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/polyfill - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/polyfill is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -636,7 +636,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/settings - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/settings is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -3418,7 +3418,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/constants - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/constants is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -3797,7 +3797,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/utils - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/utils is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -4789,7 +4789,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/math - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/math is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -6690,7 +6690,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/display - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/display is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -7617,11 +7617,11 @@ var PIXI = (function (exports) {
 	     */
 	    DisplayObject.prototype.destroy = function destroy ()
 	    {
-	        this.removeAllListeners();
 	        if (this.parent)
 	        {
 	            this.parent.removeChild(this);
 	        }
+	        this.removeAllListeners();
 	        this.transform = null;
 
 	        this.parent = null;
@@ -8583,7 +8583,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/accessibility - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/accessibility is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -9274,7 +9274,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/runner - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/runner is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -9470,7 +9470,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/ticker - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/ticker is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -10292,7 +10292,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/core - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/core is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -17540,6 +17540,18 @@ var PIXI = (function (exports) {
 	    // if linking fails, then log and cleanup
 	    if (!gl.getProgramParameter(program, gl.LINK_STATUS))
 	    {
+	        if (!gl.getShaderParameter(glVertShader, gl.COMPILE_STATUS))
+	        {
+	            console.warn(vertexSrc);
+	            console.error(gl.getShaderInfoLog(glVertShader));
+	        }
+
+	        if (!gl.getShaderParameter(glFragShader, gl.COMPILE_STATUS))
+	        {
+	            console.warn(fragmentSrc);
+	            console.error(gl.getShaderInfoLog(glFragShader));
+	        }
+
 	        console.error('Pixi.js Error: Could not initialize shader.');
 	        console.error('gl.VALIDATE_STATUS', gl.getProgramParameter(program, gl.VALIDATE_STATUS));
 	        console.error('gl.getError()', gl.getError());
@@ -17574,14 +17586,6 @@ var PIXI = (function (exports) {
 
 	    gl.shaderSource(shader, src);
 	    gl.compileShader(shader);
-
-	    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
-	    {
-	        console.warn(src);
-	        console.error(gl.getShaderInfoLog(shader));
-
-	        return null;
-	    }
 
 	    return shader;
 	}
@@ -17915,8 +17919,7 @@ var PIXI = (function (exports) {
 
 	function generateUniformsSync(group, uniformData)
 	{
-	    var textureCount = 0;
-	    var func = "var v = null;\n    var cv = null\n    var gl = renderer.gl";
+	    var func = "var v = null;\n    var cv = null\n    var t = 0;\n    var gl = renderer.gl\n    ";
 
 	    for (var i in group.uniforms)
 	    {
@@ -17926,7 +17929,7 @@ var PIXI = (function (exports) {
 	        {
 	            if (group.uniforms[i].group)
 	            {
-	                func += "\n                    renderer.shader.syncUniformGroup(uv." + i + ");\n                ";
+	                func += "\n                    renderer.shader.syncUniformGroup(uv." + i + ", syncData);\n                ";
 	            }
 
 	            continue;
@@ -17941,9 +17944,7 @@ var PIXI = (function (exports) {
 	        else if ((data.type === 'sampler2D' || data.type === 'samplerCube' || data.type === 'sampler2DArray') && data.size === 1 && !data.isArray)
 	        /* eslint-disable max-len */
 	        {
-	            func += "\n            renderer.texture.bind(uv." + i + ", " + textureCount + ");\n\n            if(ud." + i + ".value !== " + textureCount + ")\n            {\n                ud." + i + ".value = " + textureCount + ";\n                gl.uniform1i(ud." + i + ".location, " + textureCount + ");\n; // eslint-disable-line max-len\n            }\n";
-
-	            textureCount++;
+	            func += "\n\n            t = syncData.textureCount++;\n\n            renderer.texture.bind(uv." + i + ", t);\n            \n            if(ud." + i + ".value !== t)\n            {\n                ud." + i + ".value = t;\n                gl.uniform1i(ud." + i + ".location, t);\n; // eslint-disable-line max-len\n            }\n";
 	        }
 	        else if (data.type === 'mat3' && data.size === 1)
 	        {
@@ -17993,7 +17994,13 @@ var PIXI = (function (exports) {
 	        }
 	    }
 
-	    return new Function('ud', 'uv', 'renderer', func); // eslint-disable-line no-new-func
+	    /**
+	     * the introduction of syncData is to solve an issue where textures in uniform groups are not set correctly
+	     * the texture count was always starting from 0 in each group. This needs to increment each time a texture is used
+	     * no matter which group is being used
+	     *
+	     */
+	    return new Function('ud', 'uv', 'renderer', 'syncData', func); // eslint-disable-line no-new-func
 	}
 
 	var fragTemplate = [
@@ -20046,6 +20053,8 @@ var PIXI = (function (exports) {
 	};
 
 	var UID$4 = 0;
+	// defualt sync data so we don't create a new one each time!
+	var defaultSyncData = { textureCount: 0 };
 
 	/**
 	 * System plugin to the renderer to manage shaders.
@@ -20132,7 +20141,9 @@ var PIXI = (function (exports) {
 
 	        if (!dontSync)
 	        {
-	            this.syncUniformGroup(shader.uniformGroup);
+	            defaultSyncData.textureCount = 0;
+
+	            this.syncUniformGroup(shader.uniformGroup, defaultSyncData);
 	        }
 
 	        return glProgram;
@@ -20151,7 +20162,13 @@ var PIXI = (function (exports) {
 	        shader.syncUniforms(glProgram.uniformData, uniforms, this.renderer);
 	    };
 
-	    ShaderSystem.prototype.syncUniformGroup = function syncUniformGroup (group)
+	    /**
+	     *
+	     * syncs uniforms on the group
+	     * @param {*} group the uniform group to sync
+	     * @param {*} syncData this is data that is passed to the sync function and any nested sync functions
+	     */
+	    ShaderSystem.prototype.syncUniformGroup = function syncUniformGroup (group, syncData)
 	    {
 	        var glProgram = this.getglProgram();
 
@@ -20159,7 +20176,7 @@ var PIXI = (function (exports) {
 	        {
 	            glProgram.uniformGroups[group.id] = group.dirtyId;
 
-	            this.syncUniforms(group, glProgram);
+	            this.syncUniforms(group, glProgram, syncData);
 	        }
 	    };
 
@@ -20169,11 +20186,11 @@ var PIXI = (function (exports) {
 	     *
 	     * @private
 	     */
-	    ShaderSystem.prototype.syncUniforms = function syncUniforms (group, glProgram)
+	    ShaderSystem.prototype.syncUniforms = function syncUniforms (group, glProgram, syncData)
 	    {
 	        var syncFunc = group.syncUniforms[this.shader.program.id] || this.createSyncGroups(group);
 
-	        syncFunc(glProgram.uniformData, group.uniforms, this.renderer);
+	        syncFunc(glProgram.uniformData, group.uniforms, this.renderer, syncData);
 	    };
 
 	    ShaderSystem.prototype.createSyncGroups = function createSyncGroups (group)
@@ -23332,7 +23349,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/extract - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/extract is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -23607,7 +23624,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/interaction - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/interaction is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -26120,7 +26137,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/graphics - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/graphics is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -27307,8 +27324,9 @@ var PIXI = (function (exports) {
 	};
 
 	/**
-	 * A structure to hold interim batch objects.
-	 *
+	 * A structure to hold interim batch objects for Graphics.
+	 * @class
+	 * @memberof PIXI.graphicsUtils
 	 */
 	var BatchPart = function BatchPart()
 	{
@@ -27360,6 +27378,7 @@ var PIXI = (function (exports) {
 	/**
 	 * Map of fill commands for each shape type.
 	 *
+	 * @memberof PIXI.graphicsUtils
 	 * @member {Object}
 	 */
 	var FILL_COMMANDS = {};
@@ -27372,13 +27391,15 @@ var PIXI = (function (exports) {
 	/**
 	 * Batch pool, stores unused batches for preventing allocations.
 	 *
-	 * @type {Array<BatchPart>}
+	 * @memberof PIXI.graphicsUtils
+	 * @type {Array<PIXI.graphicsUtils.BatchPart>}
 	 */
 	var BATCH_POOL = [];
 
 	/**
 	 * Draw call pool, stores unused draw calls for preventing allocations.
 	 *
+	 * @memberof PIXI.graphicsUtils
 	 * @type {Array<PIXI.BatchDrawCall>}
 	 */
 	var DRAW_CALL_POOL = [];
@@ -27597,7 +27618,7 @@ var PIXI = (function (exports) {
 	         * Intermediate abstract format sent to batch system.
 	         * Can be converted to drawCalls or to batchable objects.
 	         *
-	         * @member {BatchPart[]}
+	         * @member {PIXI.graphicsUtils.BatchPart[]}
 	         * @protected
 	         */
 	        this.batches = [];
@@ -27699,12 +27720,10 @@ var PIXI = (function (exports) {
 
 	        for (var i$1 = 0; i$1 < this.batches.length; i$1++)
 	        {
-	            var batch =  this.batches[i$1];
+	            var batchPart = this.batches[i$1];
 
-	            batch.start = 0;
-	            batch.attribStart = 0;
-	            batch.style = null;
-	            BATCH_POOL.push(batch);
+	            batchPart.reset();
+	            BATCH_POOL.push(batchPart);
 	        }
 
 	        this.batches.length = 0;
@@ -27931,32 +27950,10 @@ var PIXI = (function (exports) {
 	                if (!style.visible) { continue; }
 
 	                var nextTexture = style.texture.baseTexture;
-	                var index$1 = this.indices.length;
+	                var index = this.indices.length;
 	                var attribIndex = this.points.length / 2;
 
 	                nextTexture.wrapMode = exports.WRAP_MODES.REPEAT;
-
-	                // close batch if style is different
-	                if (batchPart && !this._compareStyles(currentStyle, style))
-	                {
-	                    batchPart.end(index$1, attribIndex);
-
-	                    if (batchPart.size > 0)
-	                    {
-	                        batchPart = null;
-	                    }
-	                }
-	                // spawn new batch if its first batch or previous was closed
-	                if (!batchPart)
-	                {
-	                    batchPart = BATCH_POOL.pop() || new BatchPart();
-	                    batchPart.begin(style, index$1, attribIndex);
-	                    this.batches.push(batchPart);
-
-	                    currentStyle = style;
-	                }
-
-	                var start = this.points.length / 2;
 
 	                if (j === 0)
 	                {
@@ -27967,13 +27964,37 @@ var PIXI = (function (exports) {
 	                    this.processLine(data);
 	                }
 
-	                var size = (this.points.length / 2) - start;
+	                var size = (this.points.length / 2) - attribIndex;
 
-	                this.addUvs(this.points, uvs, style.texture, start, size, style.matrix);
+	                if (size === 0) { continue; }
+	                // close batch if style is different
+	                if (batchPart && !this._compareStyles(currentStyle, style))
+	                {
+	                    batchPart.end(index, attribIndex);
+	                    batchPart = null;
+	                }
+	                // spawn new batch if its first batch or previous was closed
+	                if (!batchPart)
+	                {
+	                    batchPart = BATCH_POOL.pop() || new BatchPart();
+	                    batchPart.begin(style, index, attribIndex);
+	                    this.batches.push(batchPart);
+	                    currentStyle = style;
+	                }
+
+	                this.addUvs(this.points, uvs, style.texture, attribIndex, size, style.matrix);
 	            }
 	        }
 
-	        if (!batchPart)
+	        if (batchPart)
+	        {
+	            var index$1 = this.indices.length;
+	            var attrib = this.points.length / 2;
+
+	            batchPart.end(index$1, attrib);
+	        }
+
+	        if (this.batches.length === 0)
 	        {
 	            // there are no visible styles in GraphicsData
 	            // its possible that someone wants Graphics just for the bounds
@@ -27981,11 +28002,6 @@ var PIXI = (function (exports) {
 
 	            return;
 	        }
-
-	        var index = this.indices.length;
-	        var attrib = this.points.length / 2;
-
-	        batchPart.end(index, attrib);
 
 	        this.indicesUint16 = new Uint16Array(this.indices);
 
@@ -29926,7 +29942,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/sprite - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/sprite is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -30601,7 +30617,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/text - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/text is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -32872,7 +32888,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/prepare - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/prepare is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -33583,7 +33599,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/app - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/app is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -36346,7 +36362,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/loaders - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/loaders is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -36647,7 +36663,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/particles - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/particles is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -37615,7 +37631,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/spritesheet - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/spritesheet is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -38023,7 +38039,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/sprite-tiling - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/sprite-tiling is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -38519,7 +38535,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/text-bitmap - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/text-bitmap is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -39207,6 +39223,7 @@ var PIXI = (function (exports) {
 	BitmapFontLoader.dirname = function dirname (url)
 	{
 	    var dir = url
+	        .replace(/\\/g, '/') // convert windows notation to UNIX notation, URL-safe because it's a forbidden character
 	        .replace(/\/$/, '') // replace trailing slash
 	        .replace(/\/[^\/]*$/, ''); // remove everything after the last
 
@@ -39344,7 +39361,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/filter-alpha - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/filter-alpha is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -39408,7 +39425,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/filter-blur - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/filter-blur is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -39833,7 +39850,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/filter-color-matrix - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/filter-color-matrix is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -40431,7 +40448,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/filter-displacement - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/filter-displacement is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -40548,7 +40565,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/filter-fxaa - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/filter-fxaa is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -40585,7 +40602,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/filter-noise - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/filter-noise is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -40664,7 +40681,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/mixin-cache-as-bitmap - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/mixin-cache-as-bitmap is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -41089,7 +41106,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/mixin-get-child-by-name - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/mixin-get-child-by-name is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -41126,7 +41143,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/mixin-get-global-position - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/mixin-get-global-position is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -42246,6 +42263,28 @@ var PIXI = (function (exports) {
 	        },
 	    });
 
+	    /**
+	     * @deprecated since 5.0.0
+	     * @member {PIXI.Point[]} PIXI.SimpleRope#points
+	     * @see PIXI.Mesh#geometry
+	     */
+	    Object.defineProperty(PIXI.SimpleRope.prototype, 'points', {
+	        get: function get()
+	        {
+	            deprecation(v5, 'PIXI.SimpleRope.points property is deprecated, '
+	                + 'use PIXI.SimpleRope.geometry.points');
+
+	            return this.geometry.points;
+	        },
+	        set: function set(value)
+	        {
+	            deprecation(v5, 'PIXI.SimpleRope.points property is deprecated, '
+	                + 'use PIXI.SimpleRope.geometry.points');
+
+	            this.geometry.points = value;
+	        },
+	    });
+
 	    // Use these to deprecate all the Sprite from* methods
 	    function spriteFrom(name, source, crossorigin, scaleMode)
 	    {
@@ -42425,7 +42464,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/mesh - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/mesh is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -43203,7 +43242,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/mesh-extras - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/mesh-extras is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -43993,7 +44032,7 @@ var PIXI = (function (exports) {
 
 	/*!
 	 * @pixi/sprite-animated - v5.2.0
-	 * Compiled Wed, 06 Nov 2019 02:32:43 UTC
+	 * Compiled Tue, 10 Dec 2019 13:20:17 UTC
 	 *
 	 * @pixi/sprite-animated is licensed under the MIT License.
 	 * http://www.opensource.org/licenses/mit-license
@@ -44436,7 +44475,7 @@ var PIXI = (function (exports) {
 	// Install renderer plugins
 	Renderer.registerPlugin('accessibility', AccessibilityManager);
 	Renderer.registerPlugin('extract', Extract);
-	Renderer.registerPlugin('interaction', InteractionManager);
+	//Renderer.registerPlugin('interaction', interaction.InteractionManager);
 	Renderer.registerPlugin('particle', ParticleRenderer);
 	Renderer.registerPlugin('prepare', Prepare);
 	Renderer.registerPlugin('batch', BatchRenderer);
